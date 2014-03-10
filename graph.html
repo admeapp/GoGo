@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<script src="graph.js"></script>
+		<script src="gogograph.js"></script>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+		<title>Graph</title>
+		<style>
+
+			*{
+				font-family: Helvetica, Arial, Sans-serif
+			}
+
+			body{
+				background:#eee;
+			}
+
+			#graph{
+				background:white;
+				width:90%;
+				height:300px;
+				margin:5%;
+			}
+
+			.ggg-grid-lines{
+				stroke: #EEE;
+				fill: none;
+				shape-rendering:crispEdges;
+			}
+
+			.ggg-label{
+				fill:#999;
+				font-size:13px;
+			}
+
+			.ggg-circle{
+				fill:rgba(0, 186, 211, 1.0);
+				stroke-width:3;
+				stroke:#FFF;
+			}
+
+			.ggg-circle:hover{
+				fill:rgba(0, 186, 211, 1.0);
+			}
+
+			.ggg-path{
+				stroke:rgba(0, 186, 211, 1.0);
+				stroke-width:3;
+				fill:none;
+			}
+
+		</style>
+		<script>
+			$(function(){
+				data = [
+					{
+						value:20,
+						label:'5 Jan'
+					},
+					{
+						value:14,
+						label:'6 Jan'
+					},
+					{
+						value:18,
+						label:'7 Jan'
+					},
+					{
+						value:23,
+						label:'8 Jan'
+					},
+					{
+						value:22,
+						label:'9 Jan'
+					},
+					{
+						value:15,
+						label:'9 Jan'
+					},
+					{
+						value:16,
+						label:'7 Jan'
+					}
+				]
+				ggg('#graph').lineGraph(data, {
+					smooth:true,
+					drawXGrids:true,
+					fillPath:true,
+					pointMouseOver: function(point, data){
+						point.setAttributeNS(null, "r",  9);
+					},
+					pointMouseOut: function(point, data){
+						point.setAttributeNS(null, "r",  7);
+					}
+				});
+			})
+		</script>
+	</head>
+
+	<body>
+		<div id="graph"></div>
+	</body>
+</html>
+
+
