@@ -6,7 +6,7 @@ var graph_methods = {
 	lineGraph: function(data, options) {
 		
 		// ySize is amount of y axis grid lines
-		this.ySize = 5;
+		this.ySize = 4;
 		if ( options && options.ySize != null ) this.ySize = options.ySize
 		this.pointRadius = 7;
 		if ( options && options.pointRadius != null ) this.pointRadius = options.pointRadius
@@ -24,7 +24,7 @@ var graph_methods = {
 
 		// Set padding and plot area
 		var horizontalPadding = 40;
-        var verticalPadding = 30;
+            var verticalPadding = 30;
       	var plotArea = {
       		width:width - (horizontalPadding),
       		height:height - (verticalPadding * 2)
@@ -46,16 +46,19 @@ var graph_methods = {
       		}
       	}
 
-      	var range = Math.round(maxNumber - minNumber);
+      	var range = maxNumber - minNumber;
+            if ( range != Math.ceil(range / this.ySize) ){
+                  range = Math.ceil(range / this.ySize) * this.ySize
+            }
+
       	// yMultipler is used to calcuate the y value of the points.
-        var yMultiplier = plotArea.height / range;
+            var yMultiplier = plotArea.height / range;
 
-        // Y axis grid lines & labels
+            // Y axis grid lines & labels
       	for ( var i = 0; i < this.ySize; i++ ){
-            var currentY = (range / this.ySize) * (i);
-            currentY += currentY / this.ySize;
-            var y = height - (yMultiplier * currentY) - verticalPadding
-
+                  var currentY = (range / this.ySize) * (i);
+                  var y = height - (yMultiplier * currentY) - verticalPadding
+      
       		// Draw grid line
       		var gridLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
       		gridLine.setAttribute('class','ggg-grid-lines');
@@ -70,9 +73,25 @@ var graph_methods = {
       		label.setAttribute('class','ggg-label');
       		label.setAttribute('x', 15);
       		label.setAttribute('y', y + 3);
-      		label.textContent = 'val';
+      		label.textContent = (range / this.ySize) * i + minNumber;
       		graph.appendChild(label);
       	}
+
+            // Draw top y axis
+            var gridLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            gridLine.setAttribute('class','ggg-grid-lines');
+            gridLine.setAttribute('x1', horizontalPadding);
+            gridLine.setAttribute('y1', height - plotArea.height - verticalPadding);
+            gridLine.setAttribute('x2', plotArea.width + 20);
+            gridLine.setAttribute('y2', height - plotArea.height - verticalPadding);
+            graph.appendChild(gridLine);
+
+            var label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            label.setAttribute('class','ggg-label');
+            label.setAttribute('x', 15);
+            label.setAttribute('y', height - plotArea.height - verticalPadding + 3);
+            label.textContent = (range + minNumber);
+            graph.appendChild(label);
 
 
       	var plotString = "";
@@ -90,9 +109,6 @@ var graph_methods = {
 
       		// Calculate y value
       		var y = height - (yMultiplier * (data[i].value - minNumber)) - verticalPadding;
-
-      		// Plot the path
-      		
 
       		// If its the first point then start the path
       		if ( i === 0 ){
